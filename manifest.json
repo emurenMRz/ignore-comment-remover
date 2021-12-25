@@ -1,0 +1,13 @@
+{
+	"manifest_version": 3,
+	"name": "IgnoreCommentRemover",
+	"version": "1.0.0",
+	"description": "Yahooファイナンス掲示板の「無視リスト対象です。」を削除します。",
+	"host_permissions": ["https://finance.yahoo.co.jp/cm/*"],
+	"content_scripts": [
+		{
+			"matches": ["https://finance.yahoo.co.jp/cm/*"],
+			"js": ["js/content_script.js"]
+		}
+	]
+}
