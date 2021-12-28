@@ -30,7 +30,7 @@ class IgnoreList {
  */
 
 class LocalIgnoreList {
-	static ignoreUsers = new Set;
+	static ignoreUsers = {};
 
 	static extractWriterData(comment) {
 		const writer = comment.querySelector('.comWriter');
@@ -52,22 +52,21 @@ class LocalIgnoreList {
 	}
 
 	static setUsers(users) {
-		if (users.constructor.name != 'Array')
-			return;
-		LocalIgnoreList.ignoreUsers = new Set(users);
+		LocalIgnoreList.ignoreUsers = users;
 		LocalIgnoreList.update();
 	}
 
-	static updateUser(userId, state) {
+	static updateUser(user, state) {
 		if (state)
-			LocalIgnoreList.ignoreUsers.add(userId);
+			LocalIgnoreList.ignoreUsers[user.id] = user.name;
 		else
-			LocalIgnoreList.ignoreUsers.delete(userId);
+			delete LocalIgnoreList.ignoreUsers[user.id];
 		LocalIgnoreList.update();
 	}
 
 	static update(node) {
-		chrome.storage.local.set({ ignoreUsers: [...LocalIgnoreList.ignoreUsers] }, () => { });
+		chrome.storage.local.set({ ignoreUsers: LocalIgnoreList.ignoreUsers }, () => { });
+		const ids = Object.keys(LocalIgnoreList.ignoreUsers);
 
 		if (!node) node = comentList;
 		for (const comment of node.querySelectorAll('div.comment')) {
@@ -77,7 +76,7 @@ class LocalIgnoreList {
 			const menuList = comment.querySelector('.comMenu>.comMenuList');
 			if (menuList && menuList.lastElementChild?.dataset?.type != 'add-ignore-user')
 				menuList.appendChild(LocalIgnoreList.buildMenuItem(data));
-			comment.classList.toggle('ICR-hideExtendedList', LocalIgnoreList.ignoreUsers.has(data.id));
+			comment.classList.toggle('ICR-hideExtendedList', ids.indexOf(data.id) >= 0);
 		}
 	}
 
@@ -96,9 +95,11 @@ class LocalIgnoreList {
 
 	static appendIgnoreUser() {
 		const userId = this.dataset.userId;
-		if (LocalIgnoreList.ignoreUsers.has(userId))
+		const ids = Object.keys(LocalIgnoreList.ignoreUsers);
+		if (ids.indexOf(userId) >= 0)
 			return;
-		LocalIgnoreList.ignoreUsers.add(userId);
+		const name = this.dataset.name;
+		LocalIgnoreList.ignoreUsers[userId] = name;
 		LocalIgnoreList.update();
 	}
 }
@@ -109,7 +110,7 @@ class LocalIgnoreList {
 
 LocalIgnoreList.initialize();
 
-chrome.storage.local.get({ hideIgnoreList: true, ignoreUsers: [] }, result => {
+chrome.storage.local.get({ hideIgnoreList: true, ignoreUsers: {} }, result => {
 	IgnoreList.setState(result.hideIgnoreList);
 	LocalIgnoreList.setUsers(result.ignoreUsers);
 });
