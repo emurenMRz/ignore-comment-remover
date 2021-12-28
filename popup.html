@@ -8,14 +8,25 @@
 </head>
 
 <body>
-	<label>
-		<div class="switchArea">
-			<input type="checkbox" id="hideIgnoreList">
-			<label for="hideIgnoreList"><span>　</span></label>
-			<div id="knob"></div>
-		</div>
-		「無視リスト対象です。」を除去
-	</label>
+	<h1>無視リストユーティリティ</h1>
+
+	<article>
+		<header>設定</header>
+		<label class="switchItem">
+			<div class="switchArea">
+				<input type="checkbox" id="hideIgnoreList">
+				<label for="hideIgnoreList"><span>　</span></label>
+				<div class="knob"></div>
+			</div>
+			「無視リスト対象です。」を除去
+		</label>
+	</article>
+	
+	<article>
+		<header>拡張機能で無視しているユーザー</header>
+		<div id="userList"></div>
+	</article>
+
 </body>
 
 </html>

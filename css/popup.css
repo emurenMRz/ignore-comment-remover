@@ -1,4 +1,22 @@
-body { min-width: 32em; }
+body { margin: 0; padding: 0; min-width: 42em; }
+
+h1 {
+	margin: 0;
+	padding-left: 1em;
+	width: 100%;
+	line-height: 2em;
+	background: linear-gradient(0deg, aquamarine, mediumspringgreen);
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+article { display: block; margin: 1em; }
+header { margin-bottom: 1em; border-bottom: 1px solid mediumspringgreen; font-weight: bold; }
+
+.switchItem {
+	position: relative;
+	cursor: pointer;
+}
 
 .switchArea {
 	position: relative;
@@ -14,22 +32,32 @@ body { min-width: 32em; }
 	display: block;
 	width: calc(2em + 8px);
 	box-sizing: border-box;
-	border: 2px solid #999;
+	border: 2px solid gray;
 	border-radius: 2px;
 }
-.switchArea input[type="checkbox"]:checked+label { border-color: #78bd78; }
+.switchArea input[type="checkbox"]:checked+label { border-color: springgreen; }
 
-.switchArea #knob {
+.switchArea .knob {
 	position: absolute;
 	width: 1em;
 	height: 1em;
-	background: #999;
+	background: gray;
 	top: 4px;
 	left: 4px;
 	border-radius: 2px;
 	transition: .2s;
 }
-.switchArea input[type="checkbox"]:checked~#knob {
+.switchArea input[type="checkbox"]:checked~.knob {
 	transform: translateX(1em);
-	background: #78bd78;
+	background: springgreen;
+}
+
+#userList label {
+	display: block;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.noEntry {
+	color: gray;
 }
