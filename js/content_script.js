@@ -1,5 +1,10 @@
 const comentList = document.getElementById('cmtlst');
 
+// 要素に一定の高さが無いと古い書き込みの読み込みが発生しなくなるので、強制的に高さを指定する
+function updatePageHeight() {
+	comentList.style.height = `${document.body.clientHeight}px`;
+}
+
 /**
  * 公式の無視リスト関係の処理
  */
@@ -22,6 +27,7 @@ class IgnoreList {
 				comment.classList.toggle('ICR-hideCommonList', IgnoreList.hide);
 			console.info(`「無視リスト対象です。」を${IgnoreList.hide ? '除去' : '表示'}しました。`);
 		}
+		updatePageHeight();
 	}
 }
 
@@ -41,6 +47,7 @@ class LocalIgnoreList {
 	}
 
 	static initialize() {
+		if (!('querySelectorAll' in comentList)) return;
 		for (const comment of comentList.querySelectorAll('div.comment')) {
 			const data = LocalIgnoreList.extractWriterData(comment);
 			if (!data)
@@ -69,6 +76,7 @@ class LocalIgnoreList {
 		const ids = Object.keys(LocalIgnoreList.ignoreUsers);
 
 		if (!node) node = comentList;
+		if (!('querySelectorAll' in node)) return;
 		for (const comment of node.querySelectorAll('div.comment')) {
 			const data = LocalIgnoreList.extractWriterData(comment);
 			if (!data)
@@ -78,6 +86,7 @@ class LocalIgnoreList {
 				menuList.appendChild(LocalIgnoreList.buildMenuItem(data));
 			comment.classList.toggle('ICR-hideExtendedList', ids.indexOf(data.id) >= 0);
 		}
+		updatePageHeight();
 	}
 
 	static buildMenuItem(data) {
