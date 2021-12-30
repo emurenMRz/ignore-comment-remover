@@ -2,6 +2,10 @@
 	display: none;
 }
 
+.ICR-limitImageSize {
+	max-height: 128px;
+}
+
 .ICR-hideExtendedList {
 	display: none;
 }

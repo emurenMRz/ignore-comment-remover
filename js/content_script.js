@@ -32,6 +32,31 @@ class IgnoreList {
 }
 
 /**
+ * コメント内の画像を縮小表示する関係の処理
+ */
+
+ class LimitImageSize {
+	static limit = true;
+
+	static setState(state) {
+		LimitImageSize.limit = state;
+		LimitImageSize.update();
+	}
+
+	static update(node) {
+		if (!node) node = comentList;
+		if (!('querySelectorAll' in node)) return;
+
+		const imageInComment = node.querySelectorAll('.comImg a img');
+		if (imageInComment.length > 0) {
+			for (const comment of imageInComment)
+				comment.classList.toggle('ICR-limitImageSize', LimitImageSize.limit);
+		}
+		updatePageHeight();
+	}
+}
+
+/**
  * ローカル無視リスト関係の処理
  */
 
@@ -119,8 +144,9 @@ class LocalIgnoreList {
 
 LocalIgnoreList.initialize();
 
-chrome.storage.local.get({ hideIgnoreList: true, ignoreUsers: {} }, result => {
+chrome.storage.local.get({ hideIgnoreList: true, limitImageSize: true, ignoreUsers: {} }, result => {
 	IgnoreList.setState(result.hideIgnoreList);
+	LimitImageSize.setState(result.limitImageSize);
 	LocalIgnoreList.setUsers(result.ignoreUsers);
 });
 
@@ -129,6 +155,7 @@ const observer = new MutationObserver((mutationList, observer) => {
 		if (mutation.type == 'childList')
 			for (const node of mutation.addedNodes) {
 				IgnoreList.update(node);
+				LimitImageSize.update(node);
 				LocalIgnoreList.update(node);
 			}
 	});
@@ -138,5 +165,6 @@ addEventListener('beforeunload', () => observer.disconnect());
 
 window.ICR = {
 	setIgnoreList: IgnoreList.setState,
+	setLimitImageSize: LimitImageSize.setState,
 	updateIgnoreUser: LocalIgnoreList.updateUser
 };
